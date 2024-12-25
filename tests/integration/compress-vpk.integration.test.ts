@@ -27,7 +27,7 @@ async function nevpk(binPath: string, dir: string): Promise<number[]> {
 async function compressVpk(binPath: string, dir: string): Promise<number[]> {
   const compressedPath = path.resolve(dir, "compressVpk.vpk");
 
-  await compressVpkMain(binPath, compressedPath);
+  await compressVpkMain({ input: binPath, output: compressedPath });
 
   const buffer = await fsp.readFile(compressedPath);
   return Array.from(buffer);
