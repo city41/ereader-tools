@@ -31,7 +31,7 @@ async function main(options: OptionValues) {
 }
 
 if (require.main === module) {
-  const packageJson = require("../package.json");
+  const packageJson = require("../../package.json");
 
   const program = new Command();
 
