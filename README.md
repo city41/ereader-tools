@@ -24,7 +24,7 @@ Brand new. So far only `compress-vpk` exists and so far it can only do a very si
 
 ```bash
 npm install --global @city41/ereader-tools
-compress-vpk myGame.bin myGame.vpk
+compress-vpk --input myGame.bin --output myGame.vpk
 ```
 
 # Development
