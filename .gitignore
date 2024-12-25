@@ -1,0 +1,16 @@
+*.P
+*.asm.t*
+*.bin
+*.rel
+*.s19
+*.vpk
+*.vpk.dec
+*.log
+*.raw
+*.sav
+*.dotcode*.bmp
+*.sym
+
+raws.mk
+
+node_modules/
