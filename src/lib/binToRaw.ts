@@ -1,24 +1,25 @@
+import * as fsp from 'node:fs/promises'
 
-int bin2raw(char *binfile, char *rawfile)
+async function binToRaw(binfile: string, rawfile: string)
 {
-	unsigned char data[64];
-	unsigned char bin[0x840];
-	unsigned char dotcodetemp[0xB60];
-	unsigned char raw[0xB60];
-	int dotcodepointer=0;
-	int dotcodeinterleave;
+    const data: number[] = new Array(64);
+    const bin: number[] = new Array(0x840);
+    const dotcodetemp: number[] = new Array(0xb60);
+    const raw: number[] = new Array(0xb60);
+    let dotcodepointer = 0;
+    let dotcodeinterleave;
 	
-	int i,j,k,l,count;
-	int temp;
-	int size;
-	FILE *f, *g;
+	let i,j,k,l;
+	let temp;
+	let size;
+    let g: number[];
 
 	initialize_rs();
 
-	if(nedc_fopen(&f,binfile,"rb"))
-		return -1; //Input file not opened.
+    const fbuffer = await fsp.readFile(binfile)
+    const f: number[] = Array.from(fbuffer);
 
-	count=count_bin(f);
+	const count=count_bin(f);
 	for(l=0;l<count;l++)
 	{
 		size=read_next_bin(f,bin);
