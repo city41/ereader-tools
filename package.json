@@ -1,11 +1,18 @@
 {
-  "name": "ereader-tools",
+  "name": "@city41/ereader-tools",
   "version": "0.0.0",
   "description": "Nintendo E-Reader development tools",
   "main": "index.js",
   "repository": "git@github.com:city41/ereader-tools.git",
   "author": "Matt Greer <matt.e.greer@gmail.com>",
   "license": "MIT",
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts"
+  ],
+  "bin": {
+    "compress-vpk": "./dist/cli/compress-vpk.js"
+  },
   "scripts": {
     "type-check": "yarn tsc --noEmit",
     "test": "yarn jest"
