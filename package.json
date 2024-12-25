@@ -1,6 +1,6 @@
 {
   "name": "@city41/ereader-tools",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Nintendo E-Reader development tools",
   "main": "index.js",
   "repository": "git@github.com:city41/ereader-tools.git",
