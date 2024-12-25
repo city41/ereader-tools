@@ -15,7 +15,10 @@
   },
   "scripts": {
     "type-check": "yarn tsc --noEmit",
-    "test": "yarn jest"
+    "test": "yarn jest",
+    "prebuild": "yarn type-check && yarn test",
+    "build": "tsc",
+    "prepublish": "yarn build"
   },
   "dependencies": {
     "@types/node": "^22.10.2",
