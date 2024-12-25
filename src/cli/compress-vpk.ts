@@ -51,10 +51,6 @@ if (require.main === module) {
       "2"
     )
     .option("-m, --method <0 | 1>", "The compression method to use", "0")
-    .option(
-      "-c, --compress",
-      "Compress the binary. This always happens, added to be compatible with nevpk"
-    )
     .parse(process.argv);
 
   const options = program.opts();
@@ -64,7 +60,7 @@ if (require.main === module) {
   } else {
     main(options)
       .then(() => {
-        console.log("sromcrom finished");
+        console.log("compress-vpk finished");
       })
       .catch((e) => {
         console.error("unexpected error", e);
