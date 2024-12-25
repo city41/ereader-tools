@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as path from "node:path";
 import * as fsp from "node:fs/promises";
 import { compress } from "../lib/compress";
