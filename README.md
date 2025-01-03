@@ -6,7 +6,7 @@ This is a port of CaitSith2's [ereader tools](https://caitsith2.com/ereader/devt
 
 ## Goals
 
-- Entirely written in JavaScript
+- Entirely written in TypeScript
 - Full support for everything CaitSith2's tools do
 - well documented and tested
 
