@@ -17,15 +17,15 @@ async function dcsToSvg(dcs: number[][]): Promise<string> {
   const width = (getDotcodelen() * 35 + 9) * dpi_multiplier;
   const height = 44 * dpi_multiplier;
 
-  const canvas = SVG().size(width, height);
-  canvas.rect(width, height).fill("white");
+  const canvas = SVG().size(`${width}mm`, `${height}mm`);
+  canvas.rect("100%", "100%").fill("white");
 
   for (let x = 0; x < width; ++x) {
     for (let y = 0; y < height; ++y) {
       const pixel = dcs[x][y];
 
       if (pixel === 1) {
-        canvas.rect(1, 1).fill("black").move(x, y);
+        canvas.rect("1mm", "1mm").fill("black").move(`${x}mm`, `${y}mm`);
       }
     }
   }

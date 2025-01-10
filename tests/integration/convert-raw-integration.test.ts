@@ -50,7 +50,6 @@ async function convertRaw(
 }
 
 async function createImageData(imagePath: string): Promise<ImageData> {
-  console.log("createImageData", imagePath);
   return new Promise((resolve) => {
     const image = new Image();
     image.onload = () => {
@@ -114,47 +113,6 @@ describe("convert-raw", function () {
         expect(Array.from(raw2bmpImageData.data)).toEqual(
           Array.from(convertRawImageData.data)
         );
-      });
-
-      it("should convert it to a 600dpi png", async function () {
-        const raw2bmpResult = await raw2bmp(dir, "-dpi", "600");
-        const convertRawResult = await convertRaw(dir, {
-          dpi: "600",
-          format: "png",
-        });
-
-        const raw2bmpImageData = await createImageData(raw2bmpResult.imagePath);
-        const convertRawImageData = await createImageData(
-          convertRawResult.imagePath
-        );
-
-        const raw2bmpData = Array.from(raw2bmpImageData.data);
-        const convertRawData = Array.from(convertRawImageData.data);
-
-        const rawfreq = raw2bmpData.reduce<Record<number, number>>(
-          (accum, val) => {
-            accum[val] = accum[val] ?? 0;
-            accum[val] += 1;
-
-            return accum;
-          },
-          {}
-        );
-
-        const convfreq = convertRawData.reduce<Record<number, number>>(
-          (accum, val) => {
-            accum[val] = accum[val] ?? 0;
-            accum[val] += 1;
-
-            return accum;
-          },
-          {}
-        );
-
-        console.log("rawfreq", JSON.stringify(rawfreq));
-        console.log("convfreq", JSON.stringify(convfreq));
-
-        expect(raw2bmpData).toEqual(convertRawData);
       });
     });
   });

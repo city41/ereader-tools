@@ -3,18 +3,20 @@
 import * as path from "node:path";
 import * as fsp from "node:fs/promises";
 import { Command, OptionValues } from "commander";
-import { rawToDcses } from "../lib/rawToDcses";
 import { setDpiMultiplier } from "../lib/dcs";
+import { rawToMarkCommands } from "../lib/rawToMarkCommands";
+import { MarkCommand } from "../lib/MarkCommandSetGenerator";
+import { markCommandsToSvg } from "../lib/markCommandsToSvg";
+import { markCommandsToPng } from "../lib/markCommandsToPng";
+import { rawToDcses } from "../lib/rawToDcses";
 import { dcsToBmp } from "../lib/dcsToBmp";
-import { dcsToPng } from "../lib/dcsToPng";
-import { dcsToSvg } from "../lib/dcsToSvg";
 
-async function convertDcsToImage(
-  dcs: number[][],
+async function convertMarkCommandsToImage(
+  markCommands: MarkCommand[],
   index: number,
   dcsCount: number,
   outputRoot: string,
-  format: "bmp" | "png" | "svg"
+  format: "png" | "svg"
 ): Promise<{ imagePath: string; imageData: number[] | string }> {
   const suffix = dcsCount === 1 ? `.${format}` : `-${index}.${format}`;
   const imagePath = path.resolve(process.cwd(), outputRoot + suffix);
@@ -22,16 +24,12 @@ async function convertDcsToImage(
   let imageData: number[] | string = [];
 
   switch (format) {
-    case "bmp": {
-      imageData = dcsToBmp(dcs);
+    case "svg": {
+      imageData = await markCommandsToSvg(markCommands);
       break;
     }
     case "png": {
-      imageData = dcsToPng(dcs);
-      break;
-    }
-    case "svg": {
-      imageData = await dcsToSvg(dcs);
+      imageData = await markCommandsToPng(markCommands);
       break;
     }
   }
@@ -40,25 +38,56 @@ async function convertDcsToImage(
 }
 
 async function main(options: OptionValues) {
+  const format = options.format ?? "svg";
+
+  if (format === "bmp") {
+    return bmpMain(options);
+  } else {
+    return markCommandsMain(options);
+  }
+}
+
+async function bmpMain(options: OptionValues) {
+  // TODO: strip off file extension
+  const outputRoot = options.output;
+
   const dpi = parseInt(options.dpi ?? "300", 10);
   setDpiMultiplier(dpi);
   const buffer = await fsp.readFile(path.resolve(process.cwd(), options.input));
 
-  console.log(JSON.stringify(options));
-
   const dcses = rawToDcses(Array.from(buffer));
-  // TODO: strip off file extension
-  const outputRoot = options.output;
 
   for (let i = 0; i < dcses.length; ++i) {
     const dcs = dcses[i];
+    const suffix = dcses.length === 1 ? ".bmp" : `-${i}.bmp`;
+    const bmpPath = path.resolve(process.cwd(), outputRoot + suffix);
+    const bmpData = dcsToBmp(dcs);
 
-    const { imagePath, imageData } = await convertDcsToImage(
-      dcs,
+    await fsp.writeFile(bmpPath, Uint8Array.from(bmpData));
+    console.log("wrote", bmpPath);
+  }
+}
+
+async function markCommandsMain(options: OptionValues) {
+  if (options.dpi) {
+    throw new Error("--dpi is only supported with --format bmp");
+  }
+
+  const buffer = await fsp.readFile(path.resolve(process.cwd(), options.input));
+
+  const markCommandSets = rawToMarkCommands(Array.from(buffer));
+  // TODO: strip off file extension
+  const outputRoot = options.output;
+
+  for (let i = 0; i < markCommandSets.length; ++i) {
+    const markCommands = markCommandSets[i];
+
+    const { imagePath, imageData } = await convertMarkCommandsToImage(
+      markCommands,
       i,
-      dcses.length,
+      markCommandSets.length,
       outputRoot,
-      options.format ?? "bmp"
+      options.format ?? "svg"
     );
 
     if (typeof imageData === "string") {
@@ -89,8 +118,8 @@ if (require.main === module) {
     )
     .option(
       "-f, --format <format>",
-      "The output image format (bmp or png)",
-      "bmp"
+      "The output image format (bmp, png or svg)",
+      "svg"
     )
     .parse(process.argv);
 

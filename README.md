@@ -28,9 +28,28 @@ Very alpha. So far only `compress-vpk` and `convert-raw` exist and both are quit
 npm install --global @city41/ereader-tools
 compress-vpk --input myGame.bin --output myGame.vpk
 convert-raw --input myGame.raw --output myGame
-convert-raw --input myGame.raw --output myGame --dpi 600
-convert-raw --input myGame.raw --output myGame --dpi 600 --format png
+convert-raw --input myGame.raw --output myGame --format bmp
+convert-raw --input myGame.raw --output myGame --format bmp --dpi 600
+convert-raw --input myGame.raw --output myGame --format png
 ```
+
+## convert-raw
+
+`convert-raw` is this toolset's equivalent to `raw2bmp`. It is currently in a transition/experimental phase and not recommended for use. For now I recommend sticking with `raw2bmp`. Ultimately I am very hopeful that `convert-raw` will create images that scan more reliably than the ones created by `raw2bmp` and match Nintendo's original dotstrips more closely, if not perfectly.
+
+### bmp
+
+If you specify `--format bmp`, it will produce MS bitmap files identical to raw2bmp. It supports the same dpi's too: 300, 600, 1200 and 2400, specified with `--dpi <dpi>`.
+
+To create bmps, it is doing the exact same steps as `raw2bmp` does. There also integration tests to verify the output matches `raw2bmp`.
+
+### png
+
+If you specify `--format png`, then only 300 dpi is supported. This is not a useful output, 300 dpi almost certainly will not scan in an E-Reader. This really exists to help ensure the svg implementation is correct.
+
+### svg
+
+Long term, this will be the main output format and likely the only supported format. With svg, `--dpi` is not supported. The resulting svg image can be scaled to any size needed, so dpi is irrelevant.
 
 # Development
 
