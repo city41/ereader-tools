@@ -50,7 +50,7 @@ describe("convert-raw", function () {
 
     await mkdirp(dir);
     await fsp.copyFile(
-      path.resolve(__dirname, "../../testFiles/solitaire.ereader1.raw"),
+      path.resolve(__dirname, "../../testFiles/solitaire.ereader1.testraw"),
       path.resolve(dir, "test.raw")
     );
   });
