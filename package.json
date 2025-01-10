@@ -21,12 +21,15 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
+    "@svgdotjs/svg.js": "^3.2.4",
     "canvas": "^3.0.1",
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "svgdom": "^0.1.19"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.2",
+    "@types/svgdom": "^0.1.2",
     "execa": "^5.1.1",
     "jest": "^29.7.0",
     "mkdirp": "^3.0.1",

@@ -2,8 +2,8 @@
 	"compilerOptions": {
 		"strict": true,
 		"baseUrl": ".",
-		"module": "CommonJS",
-		"moduleResolution": "Node",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"typeRoots": ["./node_modules/@types", "./src/types"],
 		"sourceMap": true,
 		"allowSyntheticDefaultImports": true,

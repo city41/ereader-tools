@@ -7,18 +7,19 @@ import { rawToDcses } from "../lib/rawToDcses";
 import { setDpiMultiplier } from "../lib/dcs";
 import { dcsToBmp } from "../lib/dcsToBmp";
 import { dcsToPng } from "../lib/dcsToPng";
+import { dcsToSvg } from "../lib/dcsToSvg";
 
-function convertDcsToImage(
+async function convertDcsToImage(
   dcs: number[][],
   index: number,
   dcsCount: number,
   outputRoot: string,
-  format: "png" | "bmp"
-): { imagePath: string; imageData: number[] } {
+  format: "bmp" | "png" | "svg"
+): Promise<{ imagePath: string; imageData: number[] | string }> {
   const suffix = dcsCount === 1 ? `.${format}` : `-${index}.${format}`;
   const imagePath = path.resolve(process.cwd(), outputRoot + suffix);
 
-  let imageData: number[] = [];
+  let imageData: number[] | string = [];
 
   switch (format) {
     case "bmp": {
@@ -27,6 +28,10 @@ function convertDcsToImage(
     }
     case "png": {
       imageData = dcsToPng(dcs);
+      break;
+    }
+    case "svg": {
+      imageData = await dcsToSvg(dcs);
       break;
     }
   }
@@ -48,7 +53,7 @@ async function main(options: OptionValues) {
   for (let i = 0; i < dcses.length; ++i) {
     const dcs = dcses[i];
 
-    const { imagePath, imageData } = convertDcsToImage(
+    const { imagePath, imageData } = await convertDcsToImage(
       dcs,
       i,
       dcses.length,
@@ -56,7 +61,11 @@ async function main(options: OptionValues) {
       options.format ?? "bmp"
     );
 
-    await fsp.writeFile(imagePath, Uint8Array.from(imageData));
+    if (typeof imageData === "string") {
+      await fsp.writeFile(imagePath, imageData);
+    } else {
+      await fsp.writeFile(imagePath, Uint8Array.from(imageData));
+    }
     console.log("wrote", imagePath);
   }
 }
