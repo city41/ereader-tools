@@ -108,12 +108,12 @@ if (require.main === module) {
     .version(packageJson.version)
     .option("-i, --input <raw file>", "The path to the raw file to convert")
     .option(
-      "-o, --output <bmp image file root>",
-      "The path for where to write the bmp image"
+      "-o, --output <image file root>",
+      "The path for where to write the output image"
     )
     .option(
       "--dpi <dpi>",
-      "The output image's dpi (300, 600, 1200, 2400)",
+      "The output image's dpi (300, 600, 1200, 2400), only supported with bmp",
       "300"
     )
     .option(
