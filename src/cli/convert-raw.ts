@@ -7,7 +7,7 @@ import { convertRawToBmps } from "../lib/convertRawToBmps";
 import { setDpiMultiplier } from "../lib/dcs";
 
 async function main(options: OptionValues) {
-  setDpiMultiplier(parseInt(options.dpi, 10));
+  setDpiMultiplier(parseInt(options.dpi ?? "300", 10));
   const buffer = await fsp.readFile(path.resolve(process.cwd(), options.input));
 
   const bmps = convertRawToBmps(Array.from(buffer));
@@ -58,4 +58,4 @@ if (require.main === module) {
 }
 
 // used by tests
-export { main as convertRaw };
+export { main as convertRawMain };
