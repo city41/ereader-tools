@@ -1,7 +1,11 @@
 import { SVG, registerWindow } from "@svgdotjs/svg.js";
 import { MarkCommand } from "./MarkCommandSetGenerator";
 
-async function markCommandsToSvg(markCommands: MarkCommand[]): Promise<string> {
+async function markCommandsToSvg(
+  markCommands: MarkCommand[],
+  svgShape: "circle" | "square",
+  dotGap: number
+): Promise<string> {
   const { createHTMLWindow } = await import("svgdom");
 
   const window = createHTMLWindow();
@@ -17,7 +21,14 @@ async function markCommandsToSvg(markCommands: MarkCommand[]): Promise<string> {
 
   markCommands.forEach((mc) => {
     if (mc.type === "dot") {
-      canvas.circle(0.7).fill("black").move(mc.x, mc.y);
+      const size = 1 - dotGap / 100;
+      const offset = (1 - size) / 2;
+
+      const s =
+        svgShape === "circle"
+          ? canvas.circle(size).fill("black")
+          : canvas.rect(size, size).fill("black");
+      s.move(mc.x + offset, mc.y + offset);
     } else {
       canvas.circle(5.14).fill("black").move(mc.x, mc.y);
     }

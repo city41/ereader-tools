@@ -16,7 +16,9 @@ async function convertMarkCommandsToImage(
   index: number,
   dcsCount: number,
   outputRoot: string,
-  format: "png" | "svg"
+  format: "png" | "svg",
+  svgShape: "circle" | "square",
+  dotGap: number
 ): Promise<{ imagePath: string; imageData: number[] | string }> {
   const suffix = dcsCount === 1 ? `.${format}` : `-${index}.${format}`;
   const imagePath = path.resolve(process.cwd(), outputRoot + suffix);
@@ -25,7 +27,7 @@ async function convertMarkCommandsToImage(
 
   switch (format) {
     case "svg": {
-      imageData = await markCommandsToSvg(markCommands);
+      imageData = await markCommandsToSvg(markCommands, svgShape, dotGap);
       break;
     }
     case "png": {
@@ -69,10 +71,6 @@ async function bmpMain(options: OptionValues) {
 }
 
 async function markCommandsMain(options: OptionValues) {
-  if (options.dpi) {
-    throw new Error("--dpi is only supported with --format bmp");
-  }
-
   const buffer = await fsp.readFile(path.resolve(process.cwd(), options.input));
 
   const markCommandSets = rawToMarkCommands(Array.from(buffer));
@@ -87,7 +85,9 @@ async function markCommandsMain(options: OptionValues) {
       i,
       markCommandSets.length,
       outputRoot,
-      options.format ?? "svg"
+      options.format ?? "svg",
+      options.svgShape ?? "square",
+      parseInt(options.dotGap ?? "10", 10)
     );
 
     if (typeof imageData === "string") {
@@ -120,6 +120,16 @@ if (require.main === module) {
       "-f, --format <format>",
       "The output image format (bmp, png or svg)",
       "svg"
+    )
+    .option(
+      "-s, --svg-shape <circle | square>",
+      "The shape of the main data dots, either circle or square",
+      "square"
+    )
+    .option(
+      "-g, --dot-gap <percentage>",
+      "How much gap should be between data dots, in percentage",
+      "10"
     )
     .parse(process.argv);
 
