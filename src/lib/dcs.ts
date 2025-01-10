@@ -327,7 +327,7 @@ function makebmp() {
   }
 }
 
-function make_dcs() {
+function make_dcs(): number[][] {
   let count = 0;
   fill = 0;
   for (let i = 0; i < dotcodelen; i++) {
@@ -353,6 +353,8 @@ function make_dcs() {
 
     count = 0;
   }
+
+  return dcsbmp;
 }
 
 function write_bmp(): number[] {
@@ -423,6 +425,10 @@ function setRaw(r: number[]) {
   raw = r;
 }
 
+function getDpiMultiplier() {
+  return dpi_multiplier;
+}
+
 function setDpiMultiplier(dpi: number) {
   dpi_multiplier = dpi / 300;
 
@@ -447,5 +453,6 @@ export {
   getBmplen,
   setBmplen,
   setRaw,
+  getDpiMultiplier,
   setDpiMultiplier,
 };

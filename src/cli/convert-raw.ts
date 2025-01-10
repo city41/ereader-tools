@@ -3,23 +3,61 @@
 import * as path from "node:path";
 import * as fsp from "node:fs/promises";
 import { Command, OptionValues } from "commander";
-import { convertRawToBmps } from "../lib/convertRawToBmps";
+import { rawToDcses } from "../lib/rawToDcses";
 import { setDpiMultiplier } from "../lib/dcs";
+import { dcsToBmp } from "../lib/dcsToBmp";
+import { dcsToPng } from "../lib/dcsToPng";
+
+function convertDcsToImage(
+  dcs: number[][],
+  index: number,
+  dcsCount: number,
+  outputRoot: string,
+  format: "png" | "bmp"
+): { imagePath: string; imageData: number[] } {
+  const suffix = dcsCount === 1 ? `.${format}` : `-${index}.${format}`;
+  const imagePath = path.resolve(process.cwd(), outputRoot + suffix);
+
+  let imageData: number[] = [];
+
+  switch (format) {
+    case "bmp": {
+      imageData = dcsToBmp(dcs);
+      break;
+    }
+    case "png": {
+      imageData = dcsToPng(dcs);
+      break;
+    }
+  }
+
+  return { imagePath, imageData };
+}
 
 async function main(options: OptionValues) {
-  setDpiMultiplier(parseInt(options.dpi ?? "300", 10));
+  const dpi = parseInt(options.dpi ?? "300", 10);
+  setDpiMultiplier(dpi);
   const buffer = await fsp.readFile(path.resolve(process.cwd(), options.input));
 
-  const bmps = convertRawToBmps(Array.from(buffer));
-  const bmpRoot = options.output.replace(".bmp", "") as string;
+  console.log(JSON.stringify(options));
 
-  for (let i = 0; i < bmps.length; ++i) {
-    const bmp = bmps[i];
-    const suffix = bmps.length === 1 ? ".bmp" : `-${i}.bmp`;
-    const bmpPath = path.resolve(process.cwd(), bmpRoot + suffix);
+  const dcses = rawToDcses(Array.from(buffer));
+  // TODO: strip off file extension
+  const outputRoot = options.output;
 
-    await fsp.writeFile(bmpPath, Uint8Array.from(bmp));
-    console.log("wrote", bmpPath);
+  for (let i = 0; i < dcses.length; ++i) {
+    const dcs = dcses[i];
+
+    const { imagePath, imageData } = convertDcsToImage(
+      dcs,
+      i,
+      dcses.length,
+      outputRoot,
+      options.format ?? "png"
+    );
+
+    await fsp.writeFile(imagePath, Uint8Array.from(imageData));
+    console.log("wrote", imagePath);
   }
 }
 
@@ -39,6 +77,11 @@ if (require.main === module) {
       "--dpi <dpi>",
       "The output image's dpi (300, 600, 1200, 2400)",
       "300"
+    )
+    .option(
+      "-f, --format <format>",
+      "The output image format (bmp or png)",
+      "png"
     )
     .parse(process.argv);
 
