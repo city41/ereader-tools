@@ -37,29 +37,39 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.compressVpkMain = main;
 const path = __importStar(require("node:path"));
 const fsp = __importStar(require("node:fs/promises"));
+const commander_1 = require("commander");
 const compress_1 = require("../lib/compress");
 // TODO: these should not be const
 const lzwindow = 4096;
 const lzsize = 256;
-const method = 0;
-async function main(binFilePath, destRawPath) {
-    const buffer = await fsp.readFile(binFilePath);
+async function main(options) {
+    const buffer = await fsp.readFile(path.resolve(process.cwd(), options.input));
     const result = [];
-    (0, compress_1.compress)(Array.from(buffer), buffer.length, 2, lzwindow, lzsize, method, result);
-    return fsp.writeFile(destRawPath, Uint8Array.from(result));
+    (0, compress_1.compress)(Array.from(buffer), buffer.length, parseInt((options.level ?? "2"), 10), lzwindow, lzsize, parseInt((options.method ?? "0"), 10), result);
+    return fsp.writeFile(path.resolve(process.cwd(), options.output), Uint8Array.from(result));
 }
 if (require.main === module) {
-    const [_tsNode, _dotEncoder, binFilePath, destVpkPath] = process.argv;
-    function usage() {
-        console.error("Encodes a binary into a raw file");
-        console.error("usage: compress-vpk <bin-file> <dest-vpk-file>");
-        process.exit(1);
+    const packageJson = require("../../package.json");
+    const program = new commander_1.Command();
+    program
+        .version(packageJson.version)
+        .option("-i, --input <Binary file to compress>", "The path to the input binary to compress")
+        .option("-o, --output <Compressed vpk file>", "The path for where to write the compressed vpk")
+        .option("-l, --level <0 | 1 | 2 | 3>", "The level of compression. 0: none, 2: max (default), 3: try all", "2")
+        .option("-m, --method <0 | 1>", "The compression method to use", "0")
+        .parse(process.argv);
+    const options = program.opts();
+    if (!options.input) {
+        program.help();
     }
-    if (!binFilePath || !destVpkPath) {
-        usage();
+    else {
+        main(options)
+            .then(() => {
+            console.log("compress-vpk finished");
+        })
+            .catch((e) => {
+            console.error("unexpected error", e);
+        });
     }
-    main(path.resolve(binFilePath), path.resolve(destVpkPath))
-        .then(() => console.log("done"))
-        .catch((e) => console.error(e));
 }
 //# sourceMappingURL=compress-vpk.js.map
