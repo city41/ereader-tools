@@ -53,7 +53,7 @@ async function main(options: OptionValues) {
       i,
       dcses.length,
       outputRoot,
-      options.format ?? "png"
+      options.format ?? "bmp"
     );
 
     await fsp.writeFile(imagePath, Uint8Array.from(imageData));
@@ -81,7 +81,7 @@ if (require.main === module) {
     .option(
       "-f, --format <format>",
       "The output image format (bmp or png)",
-      "png"
+      "bmp"
     )
     .parse(process.argv);
 

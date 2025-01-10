@@ -14,7 +14,6 @@ function dcsToBmp(dcs: number[][]): number[] {
 
   const length = (getDotcodelen() * 35 + 9) * dpi_multiplier;
   const width = 44 * dpi_multiplier;
-  console.log({ width, length });
 
   const bmp: number[] = [];
 
@@ -40,7 +39,7 @@ function dcsToBmp(dcs: number[][]): number[] {
   bmpheader[0x17] = (width >> 8) & 0xff;
   bmpheader[0x18] = (width >> 16) & 0xff;
   bmpheader[0x19] = (width >> 24) & 0xff;
-  i /= 32;
+  i = Math.floor(i / 32);
   if (length % 32 > 0) i++;
   i *= 4;
   i *= 44 * dpi_multiplier;
