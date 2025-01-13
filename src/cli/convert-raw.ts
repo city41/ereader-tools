@@ -20,7 +20,12 @@ async function convertMarkCommandsToImage(
   svgShape: "circle" | "square",
   dotGap: number
 ): Promise<{ imagePath: string; imageData: number[] | string }> {
-  const suffix = dcsCount === 1 ? `.${format}` : `-${index}.${format}`;
+  let suffix = dcsCount === 1 ? `.${format}` : `-${index}.${format}`;
+
+  if (format === "svg") {
+    suffix = `.${svgShape}_gap${dotGap}${suffix}`;
+  }
+
   const imagePath = path.resolve(process.cwd(), outputRoot + suffix);
 
   let imageData: number[] | string = [];
