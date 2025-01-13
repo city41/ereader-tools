@@ -11,7 +11,8 @@
     "dist/**/*.d.ts"
   ],
   "bin": {
-    "compress-vpk": "./dist/cli/compress-vpk.js"
+    "compress-vpk": "./dist/cli/compress-vpk.js",
+    "convert-raw": "./dist/cli/convert-raw.js"
   },
   "scripts": {
     "type-check": "yarn tsc --noEmit",
