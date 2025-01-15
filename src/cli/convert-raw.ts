@@ -92,7 +92,7 @@ async function markCommandsMain(options: OptionValues) {
       outputRoot,
       options.format ?? "svg",
       options.svgShape ?? "square",
-      parseInt(options.dotGap ?? "10", 10)
+      parseFloat(options.dotGap ?? "10")
     );
 
     if (typeof imageData === "string") {
