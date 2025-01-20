@@ -49,7 +49,9 @@ If you specify `--format png`, then only 300 dpi is supported. This is not a use
 
 ### svg
 
-Long term, this will be the main output format and likely the only supported format. With svg, `--dpi` is not supported. The resulting svg image can be scaled to any size needed, so dpi is irrelevant.
+Long term, this may be the main output format and likely the only supported format. With svg, `--dpi` is not supported. The resulting svg image can be scaled to any size needed, so dpi is irrelevant.
+
+That assumes svg actually provides improvements. It might not. It does allow for controlling the gap between the dots, which should help with ink bleed that varies from printer to printer. Whether this is actually true or not remains to be seen.
 
 # Development
 
