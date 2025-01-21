@@ -144,3 +144,5 @@ describe("compress-vpk", function () {
     });
   });
 });
+
+export { compressVpk };
