@@ -2,12 +2,12 @@
 
 Tools for developing applications for the Nintendo GBA E-Reader.
 
-This is a port of CaitSith2's [ereader tools](https://caitsith2.com/ereader/devtools.htm) to NodeJS.
+This is a port of CaitSith2's [ereader tools](https://caitsith2.com/ereader/devtools.htm) to NodeJS as well as neflmake, originally written by Tim Schuerewegen
 
 ## Goals
 
 - Entirely written in TypeScript
-- Full support for everything CaitSith2's tools do
+- Full support for everything the original tools do
 - Improvements and additions, such as raw to svg
 - well documented and tested
 
@@ -20,13 +20,14 @@ This is a port of CaitSith2's [ereader tools](https://caitsith2.com/ereader/devt
 
 # Status
 
-Very alpha. So far only `compress-vpk` and `convert-raw` exist and both are quite raw (no pun intended). Not recommended for general usage yet.
+Very alpha. So far only `compress-vpk`, `convert-raw` and `create-sav` exist and are quite raw (no pun intended). Not recommended for general usage yet.
 
 # To Use
 
 ```bash
 npm install --global @city41/ereader-tools
 compress-vpk --input myGame.bin --output myGame.vpk
+create-sav --input myGame.vpk --output myGame.sav --type z80 --region us
 convert-raw --input myGame.raw --output myGame
 convert-raw --input myGame.raw --output myGame --format bmp
 convert-raw --input myGame.raw --output myGame --format bmp --dpi 600
