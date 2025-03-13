@@ -1,0 +1,31 @@
+declare class _ReedSolomon {
+    static d_mm: number;
+    static d_nn: number;
+    static d_tt: number;
+    static d_kk: number;
+    mm: number;
+    nn: number;
+    tt: number;
+    kk: number;
+    pp: number;
+    b0: number;
+    alpha_to: number[];
+    index_of: number[];
+    gg: number[];
+    recd: number[];
+    rs_init: number;
+    curr_errlen: number;
+    private zerofill;
+    private eras_dec_rs;
+    private make_pow;
+    private make_rev;
+    private gen_poly;
+    private generate_gf;
+    initialize_rs(bits?: number, polynomial?: number, index?: number, errlen?: number): void;
+    private reverse_byte_order;
+    private invert_error_bytes;
+    correct_errors(data: number[], errlen: number, erasure?: number[] | null): number;
+    get isInitialized(): boolean;
+}
+declare const ReedSolomon: _ReedSolomon;
+export { ReedSolomon };

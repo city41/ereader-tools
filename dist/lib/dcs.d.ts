@@ -1,0 +1,14 @@
+declare function clear_dcs(): void;
+declare function eight_ten_modulate(): void;
+declare function init_dcs(): void;
+declare function makebmp(): void;
+declare function make_dcs(): number[][];
+declare function write_bmp(): number[];
+declare function getDotcodelen(): number;
+declare function setDotcodelen(dcl: number): void;
+declare function getBmplen(): number;
+declare function setBmplen(bl: number): void;
+declare function setRaw(r: number[]): void;
+declare function getDpiMultiplier(): number;
+declare function setDpiMultiplier(dpi: number): void;
+export { clear_dcs, init_dcs, eight_ten_modulate, make_dcs, makebmp, write_bmp, getDotcodelen, setDotcodelen, getBmplen, setBmplen, setRaw, getDpiMultiplier, setDpiMultiplier, };

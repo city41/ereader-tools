@@ -13,7 +13,9 @@
 		"outDir": "dist",
 		"skipLibCheck": true,
 		"noUnusedLocals": true,
-		"allowJs": false
+		"allowJs": false,
+		"alwaysStrict": null,
+		"declaration": true
 	},
 	"include": ["src/**/*"]
 }
