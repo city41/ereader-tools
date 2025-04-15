@@ -17,7 +17,6 @@ async function markCommandsToSvg(
   const height = 44;
 
   const canvas = SVG().viewbox({ x: 0, y: 0, width, height });
-  canvas.rect("100%", "100%").fill("white");
 
   markCommands.forEach((mc) => {
     if (mc.type === "dot") {
