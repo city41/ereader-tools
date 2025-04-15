@@ -12,7 +12,8 @@
   ],
   "bin": {
     "compress-vpk": "./dist/cli/compress-vpk.js",
-    "convert-raw": "./dist/cli/convert-raw.js"
+    "convert-raw": "./dist/cli/convert-raw.js",
+    "inject-strips": "./dist/cli/inject-strips.js"
   },
   "scripts": {
     "type-check": "yarn tsc --noEmit",
