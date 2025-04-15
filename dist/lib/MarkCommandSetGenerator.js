@@ -7,18 +7,40 @@ class MarkCommandSetGenerator {
         return this.raw[i * J_LENGTH + j] ?? 0;
     }
     drawDot(x, y) {
-        this.marks.push({
-            x,
-            y,
-            type: "dot",
-        });
+        if (this.flip) {
+            this.marks.push({
+                // TODO: this is hardcoded for 300dpi, which so far is the only dpi png
+                // supports, and is irrelevant for svg
+                x: this.width - x - 1,
+                y: this.height - y - 1,
+                type: "dot",
+            });
+        }
+        else {
+            this.marks.push({
+                x,
+                y,
+                type: "dot",
+            });
+        }
     }
     drawSyncMarker(x, y) {
-        this.marks.push({
-            x,
-            y,
-            type: "sync",
-        });
+        if (this.flip) {
+            this.marks.push({
+                // TODO: this is hardcoded for 300dpi, which so far is the only dpi png
+                // supports, and is irrelevant for svg
+                x: this.width - x - 5,
+                y: this.height - y - 5,
+                type: "sync",
+            });
+        }
+        else {
+            this.marks.push({
+                x,
+                y,
+                type: "sync",
+            });
+        }
     }
     calcAddr(address) {
         let start;
@@ -86,13 +108,18 @@ class MarkCommandSetGenerator {
             }
         }
     }
-    constructor(raw) {
+    constructor(raw, flip) {
         this.addr = [0, 0x3ff];
+        // TODO: this width is hardcoded for long dotstrips at 300 dpi
+        this.width = 28 * 35 + 9;
+        this.height = 44;
         this.marks = [];
         this._810mod = new Array(28).fill(null).map(() => {
             return new Array(130);
         });
         this.raw = raw;
+        this.flip = flip;
+        this.width;
     }
     init() {
         const dotCodeLength = this.raw.length / 0x68;

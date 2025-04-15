@@ -11,7 +11,6 @@ async function markCommandsToSvg(markCommands, svgShape, dotGap) {
     const width = dotCodeLength * 35 + 9;
     const height = 44;
     const canvas = (0, svg_js_1.SVG)().viewbox({ x: 0, y: 0, width, height });
-    canvas.rect("100%", "100%").fill("white");
     markCommands.forEach((mc) => {
         if (mc.type === "dot") {
             const size = 1 - dotGap / 100;

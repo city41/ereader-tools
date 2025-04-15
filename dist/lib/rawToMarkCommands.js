@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.rawToMarkCommands = rawToMarkCommands;
 const MarkCommandSetGenerator_1 = require("./MarkCommandSetGenerator");
 const count_raw_1 = require("./count_raw");
-function rawToMarkCommands(rawfile) {
+function rawToMarkCommands(rawfile, flip) {
     const num_raw = (0, count_raw_1.count_raw)(rawfile);
     let offset = 0;
     const markCommandSets = [];
@@ -13,7 +13,7 @@ function rawToMarkCommands(rawfile) {
             throw new Error("raw unexpectedly null");
         }
         offset += raw.length;
-        const markCommandSetGenerator = new MarkCommandSetGenerator_1.MarkCommandSetGenerator(raw);
+        const markCommandSetGenerator = new MarkCommandSetGenerator_1.MarkCommandSetGenerator(raw, !!flip);
         markCommandSetGenerator.init();
         markCommandSetGenerator.eightTenModulate();
         const marks = markCommandSetGenerator.generateMarks();

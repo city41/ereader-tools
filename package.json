@@ -23,7 +23,9 @@
   },
   "dependencies": {
     "@svgdotjs/svg.js": "^3.2.4",
+    "@types/cheerio": "^0.22.35",
     "canvas": "^3.0.1",
+    "cheerio": "^1.0.0",
     "commander": "^12.1.0",
     "svgdom": "^0.1.19"
   },
