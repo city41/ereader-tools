@@ -4,7 +4,7 @@ import {
 } from "./MarkCommandSetGenerator";
 import { count_raw, read_next_raw } from "./count_raw";
 
-function rawToMarkCommands(rawfile: number[]): MarkCommand[][] {
+function rawToMarkCommands(rawfile: number[], flip?: boolean): MarkCommand[][] {
   const num_raw = count_raw(rawfile);
   let offset = 0;
   const markCommandSets: MarkCommand[][] = [];
@@ -18,7 +18,7 @@ function rawToMarkCommands(rawfile: number[]): MarkCommand[][] {
 
     offset += raw.length;
 
-    const markCommandSetGenerator = new MarkCommandSetGenerator(raw);
+    const markCommandSetGenerator = new MarkCommandSetGenerator(raw, !!flip);
 
     markCommandSetGenerator.init();
     markCommandSetGenerator.eightTenModulate();

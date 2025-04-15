@@ -29,17 +29,19 @@ async function raw2bmp(
 
 async function convertRaw(
   dir: string,
-  additionalArgs: Record<string, string> = {}
+  additionalArgs: Record<string, any> = {}
 ): Promise<{ imagePath: string; imageData: number[] }> {
+  const outputPath = path.resolve(dir, `test_${Date.now()}_convertRaw`);
+
   await convertRawMain({
     input: path.resolve(dir, "test.raw"),
-    output: path.resolve(dir, "test_convertRaw"),
+    output: outputPath,
     ...additionalArgs,
   });
 
   const imgPath = path.resolve(
     dir,
-    `test_convertRaw.${additionalArgs.format ?? "bmp"}`
+    `${outputPath}.${additionalArgs.format ?? "bmp"}`
   );
   const buffer = await fsp.readFile(imgPath);
 
@@ -49,13 +51,23 @@ async function convertRaw(
   };
 }
 
-async function createImageData(imagePath: string): Promise<ImageData> {
+async function createImageData(
+  imagePath: string,
+  flip?: boolean
+): Promise<ImageData> {
   return new Promise((resolve) => {
     const image = new Image();
     image.onload = () => {
       const canvas = createCanvas(image.width, image.height);
       const context = canvas.getContext("2d")!;
-      context.drawImage(image, 0, 0);
+
+      if (flip) {
+        context.translate(canvas.width / 2, canvas.height / 2);
+        context.rotate(Math.PI);
+        context.drawImage(image, -canvas.width / 2, -canvas.height / 2);
+      } else {
+        context.drawImage(image, 0, 0);
+      }
 
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
       resolve(imageData);
@@ -113,6 +125,30 @@ describe("convert-raw", function () {
         expect(Array.from(raw2bmpImageData.data)).toEqual(
           Array.from(convertRawImageData.data)
         );
+      });
+
+      it.only("should flip the png strip", async function () {
+        const convertRawResult = await convertRaw(dir, { format: "png" });
+        const convertRawFlippedResult = await convertRaw(dir, {
+          format: "png",
+          flip: true,
+        });
+
+        const nonFlippedImageData = await createImageData(
+          convertRawResult.imagePath
+        );
+
+        // by flipping it back, the two should then be the same
+        const flippedImageData = await createImageData(
+          convertRawFlippedResult.imagePath,
+          true
+        );
+
+        const nonFlippedImageDataArray = Array.from(nonFlippedImageData.data);
+        const flippedImageDataArray = Array.from(flippedImageData.data);
+
+        // if this hangs that is a "no", stupid jest...
+        expect(nonFlippedImageDataArray).toEqual(flippedImageDataArray);
       });
     });
   });

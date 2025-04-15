@@ -78,7 +78,7 @@ async function bmpMain(options: OptionValues) {
 async function markCommandsMain(options: OptionValues) {
   const buffer = await fsp.readFile(path.resolve(process.cwd(), options.input));
 
-  const markCommandSets = rawToMarkCommands(Array.from(buffer));
+  const markCommandSets = rawToMarkCommands(Array.from(buffer), options.flip);
   // TODO: strip off file extension
   const outputRoot = options.output;
 
@@ -135,6 +135,10 @@ if (require.main === module) {
       "-g, --dot-gap <percentage>",
       "How much gap should be between data dots, in percentage",
       "10"
+    )
+    .option(
+      "-l, --flip",
+      "If set, the dotstrip will be flipped for easier placing at the top of a card"
     )
     .parse(process.argv);
 

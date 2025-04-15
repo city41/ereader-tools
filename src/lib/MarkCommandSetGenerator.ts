@@ -28,6 +28,10 @@ class MarkCommandSetGenerator {
 
   addr = [0, 0x3ff];
   raw: number[];
+  flip: boolean;
+  // TODO: this width is hardcoded for long dotstrips at 300 dpi
+  width = 28 * 35 + 9;
+  height = 44;
   marks: MarkCommand[] = [];
 
   _810mod: number[][] = new Array(28).fill(null).map(() => {
@@ -39,19 +43,39 @@ class MarkCommandSetGenerator {
   }
 
   private drawDot(x: number, y: number) {
-    this.marks.push({
-      x,
-      y,
-      type: "dot",
-    });
+    if (this.flip) {
+      this.marks.push({
+        // TODO: this is hardcoded for 300dpi, which so far is the only dpi png
+        // supports, and is irrelevant for svg
+        x: this.width - x - 1,
+        y: this.height - y - 1,
+        type: "dot",
+      });
+    } else {
+      this.marks.push({
+        x,
+        y,
+        type: "dot",
+      });
+    }
   }
 
   private drawSyncMarker(x: number, y: number) {
-    this.marks.push({
-      x,
-      y,
-      type: "sync",
-    });
+    if (this.flip) {
+      this.marks.push({
+        // TODO: this is hardcoded for 300dpi, which so far is the only dpi png
+        // supports, and is irrelevant for svg
+        x: this.width - x - 5,
+        y: this.height - y - 5,
+        type: "sync",
+      });
+    } else {
+      this.marks.push({
+        x,
+        y,
+        type: "sync",
+      });
+    }
   }
 
   private calcAddr(address: number) {
@@ -132,8 +156,10 @@ class MarkCommandSetGenerator {
     }
   }
 
-  constructor(raw: number[]) {
+  constructor(raw: number[], flip: boolean) {
     this.raw = raw;
+    this.flip = flip;
+    this.width;
   }
 
   init() {
