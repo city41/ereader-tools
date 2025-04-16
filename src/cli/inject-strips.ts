@@ -22,7 +22,16 @@ async function injectStrip(
   );
   group1.append(circles1);
   $i("svg").append(group1);
-  $i('rect[inkscape\\:label="lowerDotStripRect"]').remove();
+
+  const lowerDotStripRects = $i('rect[inkscape\\:label="lowerDotStripRect"]');
+
+  if (lowerDotStripRects.length !== 1) {
+    throw new Error(
+      `Unexpected number of lowerDotStripRects: ${lowerDotStripRects.length}`
+    );
+  }
+
+  lowerDotStripRects.remove();
 
   if (strip2Src) {
     const $s2 = cheerio.load(strip2Src, { xmlMode: true });
@@ -36,7 +45,15 @@ async function injectStrip(
     );
     group2.append(circles2);
     $i("svg").append(group2);
-    $i('rect[inkscape\\:label="upperDotStripRect"]').remove();
+    const upperDotStripRects = $i('rect[inkscape\\:label="upperDotStripRect"]');
+
+    if (upperDotStripRects.length !== 1) {
+      throw new Error(
+        `Unexpected number of upperDotStripRects: ${upperDotStripRects.length}`
+      );
+    }
+
+    lowerDotStripRects.remove();
   }
 
   return $i.html();
