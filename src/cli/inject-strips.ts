@@ -53,7 +53,7 @@ async function injectStrip(
       );
     }
 
-    lowerDotStripRects.remove();
+    upperDotStripRects.remove();
   }
 
   return $i.html();
