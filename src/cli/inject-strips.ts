@@ -5,15 +5,20 @@ import * as fsp from "node:fs/promises";
 import { Command, OptionValues } from "commander";
 import * as cheerio from "cheerio";
 
-const UPPER_STRIP_TRANSFORM =
+const UPPER_STRIP_TRANSFORM_BLEED =
   "matrix(0.08465497,0,0,0.08437967,12.099588,12.353642)";
-const LOWER_STRIP_TRANSFORM =
+const LOWER_STRIP_TRANSFORM_BLEED =
   "matrix(0.08465497,0,0,0.08437967,12.099588,66.456639)";
+const LOWER_STRIP_TRANSFORM_NO_BLEED =
+  "matrix(0.08465497,0,0,0.08437967,2.5821875,56.939244)";
+const UPPER_STRIP_TRANSFORM_NO_BLEED =
+  "matrix(0.08465497,0,0,0.08437967,2.5821875,2.8362396)";
 
 async function injectStrip(
   svgImageSrc: string,
   strip1Src: string,
-  strip2Src?: string
+  strip2Src?: string,
+  bleed = false
 ): Promise<string> {
   const $i = cheerio.load(svgImageSrc, { xmlMode: true });
   const $s1 = cheerio.load(strip1Src, { xmlMode: true });
@@ -21,7 +26,10 @@ async function injectStrip(
   const circles1 = $s1("svg").find("circle");
   const group1 = $i("<g />");
   group1.prop("id", "strip1");
-  group1.prop("transform", LOWER_STRIP_TRANSFORM);
+  group1.prop(
+    "transform",
+    bleed ? LOWER_STRIP_TRANSFORM_BLEED : LOWER_STRIP_TRANSFORM_NO_BLEED
+  );
   group1.append(circles1);
   $i("svg").append(group1);
 
@@ -41,7 +49,10 @@ async function injectStrip(
     const circles2 = $s2("svg").find("circle");
     const group2 = $i("<g />");
     group2.prop("id", "strip2");
-    group2.prop("transform", UPPER_STRIP_TRANSFORM);
+    group2.prop(
+      "transform",
+      bleed ? UPPER_STRIP_TRANSFORM_BLEED : UPPER_STRIP_TRANSFORM_NO_BLEED
+    );
     group2.append(circles2);
     $i("svg").append(group2);
     const upperDotStripRects = $i('rect[inkscape\\:label="upperDotStripRect"]');
@@ -72,7 +83,12 @@ async function main(options: OptionValues) {
     strip2Src = (await fsp.readFile(strip2Path)).toString();
   }
 
-  const finalSvgSrc = await injectStrip(svgImageSrc, strip1Src, strip2Src);
+  const finalSvgSrc = await injectStrip(
+    svgImageSrc,
+    strip1Src,
+    strip2Src,
+    options.bleed === true || options.bleed === "true"
+  );
 
   const svgImageRoot = path.basename(options.input, ".svg");
   const outputPath = path.resolve(
@@ -107,6 +123,7 @@ if (require.main === module) {
       "-s2, --strip2 [strip2-file]",
       "The path to the optional second strip"
     )
+    .option("-b, --bleed", "Set for cards with a .375 inch bleed")
     .parse(process.argv);
 
   const options = program.opts();
