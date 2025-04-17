@@ -5,6 +5,11 @@ import * as fsp from "node:fs/promises";
 import { Command, OptionValues } from "commander";
 import * as cheerio from "cheerio";
 
+const UPPER_STRIP_TRANSFORM =
+  "matrix(0.08465497,0,0,0.08437967,12.099588,12.353642)";
+const LOWER_STRIP_TRANSFORM =
+  "matrix(0.08465497,0,0,0.08437967,12.099588,66.456639)";
+
 async function injectStrip(
   svgImageSrc: string,
   strip1Src: string,
@@ -16,10 +21,7 @@ async function injectStrip(
   const circles1 = $s1("svg").find("circle");
   const group1 = $i("<g />");
   group1.prop("id", "strip1");
-  group1.prop(
-    "transform",
-    "matrix(0.08465497,0,0,0.08437967,2.5821875,56.939244)"
-  );
+  group1.prop("transform", LOWER_STRIP_TRANSFORM);
   group1.append(circles1);
   $i("svg").append(group1);
 
@@ -39,10 +41,7 @@ async function injectStrip(
     const circles2 = $s2("svg").find("circle");
     const group2 = $i("<g />");
     group2.prop("id", "strip2");
-    group2.prop(
-      "transform",
-      "matrix(0.08465497,0,0,0.08437967,2.5821875,2.8362396)"
-    );
+    group2.prop("transform", UPPER_STRIP_TRANSFORM);
     group2.append(circles2);
     $i("svg").append(group2);
     const upperDotStripRects = $i('rect[inkscape\\:label="upperDotStripRect"]');
