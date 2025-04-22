@@ -6,13 +6,14 @@ import { Command, OptionValues } from "commander";
 import * as cheerio from "cheerio";
 
 const UPPER_STRIP_TRANSFORM_BLEED =
-  "matrix(0.08465497,0,0,0.08437967,12.099588,12.353642)";
+  "matrix(-0.08465497,0,0,-0.08437968,95.835211,16.078161)";
 const LOWER_STRIP_TRANSFORM_BLEED =
   "matrix(0.08465497,0,0,0.08437967,12.099588,66.456639)";
+
 const LOWER_STRIP_TRANSFORM_NO_BLEED =
   "matrix(0.08465497,0,0,0.08437967,2.5821875,56.939244)";
 const UPPER_STRIP_TRANSFORM_NO_BLEED =
-  "matrix(0.08465497,0,0,0.08437967,2.5821875,2.8362396)";
+  "matrix(-0.08465497,0,0,-0.08437969,86.317811,6.5607584)";
 
 async function injectStrip(
   svgImageSrc: string,
