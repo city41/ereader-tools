@@ -16,6 +16,7 @@ This is a port of CaitSith2's [ereader tools](https://caitsith2.com/ereader/devt
 - Generally non-native tools are easier to work with.
 - Support actions in the eventual VSCode Ereader extension I plan to make.
 - Support the eventual web version of these tools.
+  - Here is [one simple web tool](https://www.retrodotcards.com/tools/convert-raw) as an example.
 - Print out more accurate dotcode strips that more closely match Nintendo's
 
 # Status
