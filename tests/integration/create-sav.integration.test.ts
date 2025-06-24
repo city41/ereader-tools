@@ -4,7 +4,7 @@ import * as fsp from "node:fs/promises";
 import execa from "execa";
 import { mkdirp } from "mkdirp";
 import { createSavMain } from "../../src/cli/create-sav";
-import { compressVpk } from "./compress-vpk.integration.test";
+import { compressVpk } from "./compress-vpk-utils";
 
 async function neflmak(
   binaryPath: string,
@@ -39,7 +39,7 @@ async function createSav(binaryPath: string, dir: string, additionArgs = {}) {
   return Array.from(buffer);
 }
 
-describe.only("create-sav", function () {
+describe("create-sav", function () {
   let dir = "";
 
   beforeEach(async function () {

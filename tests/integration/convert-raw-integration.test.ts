@@ -127,7 +127,7 @@ describe("convert-raw", function () {
         );
       });
 
-      it.only("should flip the png strip", async function () {
+      it("should flip the png strip", async function () {
         const convertRawResult = await convertRaw(dir, { format: "png" });
         const convertRawFlippedResult = await convertRaw(dir, {
           format: "png",
