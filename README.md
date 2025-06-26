@@ -28,6 +28,7 @@ Very alpha. So far only `compress-vpk`, `convert-raw` and `create-sav` exist and
 ```bash
 npm install --global @city41/ereader-tools
 compress-vpk --input myGame.bin --output myGame.vpk
+decompress-vpk --input myGame.vpk --output myGame.bin
 create-sav --input myGame.vpk --output myGame.sav --type z80 --region us
 convert-raw --input myGame.raw --output myGame
 convert-raw --input myGame.raw --output myGame --format bmp
