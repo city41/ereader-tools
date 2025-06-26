@@ -12,6 +12,7 @@
   ],
   "bin": {
     "compress-vpk": "./dist/cli/compress-vpk.js",
+    "decompress-vpk": "./dist/cli/decompress-vpk.js",
     "convert-raw": "./dist/cli/convert-raw.js",
     "inject-strips": "./dist/cli/inject-strips.js"
   },
